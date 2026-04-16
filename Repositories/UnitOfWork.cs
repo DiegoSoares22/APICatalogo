@@ -30,13 +30,18 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public void Commit()
+    public async Task Commit()
     {
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
     public void Dispose()
     {
-        _context.Dispose();
+       _context.Dispose();
+    }
+
+    public Task CommitAsync()
+    {
+        throw new NotImplementedException();
     }
 }

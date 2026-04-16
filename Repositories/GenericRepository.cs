@@ -41,4 +41,14 @@ public class GenericRepository<T> : IRepository<T> where T : class
         _context.SaveChanges();
         return entity;
     }
+
+    public Task<IEnumerable<T>> GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
 }
