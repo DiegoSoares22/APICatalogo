@@ -5,8 +5,10 @@ using APICatalogo.Pagination;
 using APICatalogo.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Caching.Memory;
 using X.PagedList;
 
 namespace APICatalogo.Controllers;
@@ -19,21 +21,40 @@ public class CategoriasController : ControllerBase
 {
     private readonly IUnitOfWork _uof;
     private readonly ILogger<CategoriasController> _logger;
+    private readonly IMemoryCache _cache;
+    private const string CacheCategoriaKey = "CacheCategorias";
 
-    public CategoriasController(ILogger<CategoriasController> logger, IUnitOfWork uof)
+    public CategoriasController(ILogger<CategoriasController> logger, IUnitOfWork uof, IMemoryCache cache)
     {
         _logger = logger;
         _uof = uof;
+        _cache = cache;
     }
 
     [HttpGet]
     //[Authorize]
-    public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get()
+    public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get()  // ✅ Erro 1 corrigido: adicionado {
     {
-        var categorias = await _uof.CategoriaRepository.GetAllAsync();
+        if (!_cache.TryGetValue(CacheCategoriaKey, out IEnumerable<Categoria>? categorias))
+        {
+            categorias = await _uof.CategoriaRepository.GetAllAsync(); // ✅ Erro 2 corrigido: removido 'var'
 
-        if (categorias is null)
-            return NotFound("Não existem categorias...");
+            if (categorias is not null && categorias.Any()) // ✅ Erro 3 corrigido: removido '!'
+            {
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
+                    SlidingExpiration = TimeSpan.FromSeconds(15),
+                    Priority = CacheItemPriority.High
+                };
+                _cache.Set(CacheCategoriaKey, categorias, cacheOptions);
+            }
+            else
+            {
+                _logger.LogWarning("Não existem categorias cadastradas...");
+                return NotFound("Não existem categorias cadastradas...");
+            }
+        }
 
         /* var categoriasDto = new List<CategoriaDTO>();
         foreach (var categoria in categorias )
@@ -49,11 +70,11 @@ public class CategoriasController : ControllerBase
         var categoriasDto = categorias.ToCategoriaDTOList();
         return Ok(categoriasDto);
     }
+
     [HttpGet("pagination")]
     public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get([FromQuery] CategoriasParameters categoriasParameters)
     {
         var categorias = await _uof.CategoriaRepository.GetCategoriasAsync(categoriasParameters);
-
         return ObterCategorias(categorias);
     }
 
@@ -85,7 +106,7 @@ public class CategoriasController : ControllerBase
     [HttpGet("{id:int}", Name = "ObterCategoria")]
     public async Task<ActionResult<CategoriaDTO>> Get(int id)
     {
-        var categoria = await _uof.CategoriaRepository.GetAsync(c=> c.CategoriaId == id);
+        var categoria = await _uof.CategoriaRepository.GetAsync(c => c.CategoriaId == id);
 
         if (categoria is null)
         {
@@ -131,9 +152,9 @@ public class CategoriasController : ControllerBase
             Nome = categoriaCriada.Nome,
             ImagemUrl = categoriaCriada.ImagemUrl
         }; */
-        var novaCategoriaDto = categoriaCriada.ToCategoriaDTO(); 
+        var novaCategoriaDto = categoriaCriada.ToCategoriaDTO();
 
-        return new CreatedAtRouteResult("ObterCategoria", 
+        return new CreatedAtRouteResult("ObterCategoria",
             new { id = novaCategoriaDto.CategoriaId },
             categoriaCriada);
     }
@@ -168,7 +189,7 @@ public class CategoriasController : ControllerBase
 
         var categoriaAtualizadaDto = categoriaAtualizada.ToCategoriaDTO();
 
-        return Ok(categoria);
+        return Ok(categoriaAtualizadaDto);
     }
 
     [HttpDelete("{id:int}")]
@@ -192,9 +213,8 @@ public class CategoriasController : ControllerBase
             Nome = categoriaExcluida.Nome,
             ImagemUrl = categoriaExcluida.ImagemUrl
         }; */
-         var categoriaExcluidaDto = categoriaExcluida.ToCategoriaDTO();
+        var categoriaExcluidaDto = categoriaExcluida.ToCategoriaDTO();
 
-        return Ok(categoriaExcluida);
-
+        return Ok(categoriaExcluidaDto);
     }
 }

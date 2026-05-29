@@ -1,12 +1,7 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Diego\\Downloads\\Estudo full stack\\APICatalogo\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Diego\\Downloads\\Estudo full stack\\APICatalogo\\APICatalogo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:APICatalogo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    }
-  ],
+  "WorkspaceRootPath": "C:\\Users\\Diego\\Downloads\\Estudos\\APICatalogo\\",
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,24 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "APICatalogo.csproj",
-              "DocumentMoniker": "C:\\Users\\Diego\\Downloads\\Estudo full stack\\APICatalogo\\APICatalogo.csproj",
-              "RelativeDocumentMoniker": "APICatalogo.csproj",
-              "ToolTip": "C:\\Users\\Diego\\Downloads\\Estudo full stack\\APICatalogo\\APICatalogo.csproj",
-              "RelativeToolTip": "APICatalogo.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-03-18T17:55:13.881Z",
-              "EditorCaption": ""
             }
           ]
         }
