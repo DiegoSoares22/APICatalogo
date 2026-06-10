@@ -5,7 +5,7 @@
 
 # dotenv files
 .env
-
+	
 # User-specific files
 *.rsuser
 *.suo
@@ -483,3 +483,22 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 apiserver.pem
+
+# ============================================================
+# SEGURANÇA — Específico para este projeto
+# ============================================================
+
+# Configurações com segredos (connection string, JWT keys)
+appsettings.Development.json
+appsettings.Production.json
+
+# User Secrets do ASP.NET Core (gerados pelo dotnet user-secrets)
+secrets.json
+
+# Certificados e chaves (apiserver.pem já está no final, mas garante)
+*.pem
+*.cer
+*.p7b
+
+# Arquivos de publicação com dados sensíveis (já tem *.pubxml, reforçando)
+*.PublishSettings
